@@ -44,10 +44,17 @@
               }
               scope.getLegend = getLegend;
               scope.toggle = toggle;
-              scope.toggleLayer = toggleLayer;
               scope.addPreviewLayer = addPreviewLayer;
               scope.removePreviewLayer = removePreviewLayer;
               scope.inPreviewMode = inPreviewMode;
+
+              if (!angular.isDefined(scope.item.children)) {
+                scope.$watch('item.selectedOpen', function(newVal, oldVal) {
+                  if (newVal != oldVal) {
+                    toggleLayer(scope.item, scope.map);
+                  }
+                });
+              }
 
               compiledContent(scope, function(clone, scope) {
                 iEl.append(clone);
@@ -98,10 +105,7 @@
           return angular.isDefined(layer) && layer.preview;
         }
 
-        function toggleLayer() {
-          // "this" is the scope
-          var item = this.item;
-          var map = this.map;
+        function toggleLayer(item, map) {
           var layer = getMapLayer(map, item.idBod);
           if (!angular.isDefined(layer)) {
             // FIXME: we are super cautious here and display error messages
