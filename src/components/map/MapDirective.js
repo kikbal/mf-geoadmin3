@@ -7,7 +7,7 @@
   ]);
 
   module.directive('gaMap',
-      function($parse, $timeout, gaPermalink) {
+      function($parse, $timeout, gaPermalink, gaLayers, $http, $q) {
           return {
             restrict: 'A',
             scope: {
@@ -37,6 +37,33 @@
                 }));
                 gaPermalink.deleteParam('crosshair');
               }
+
+              gaLayers.loadForTopic('ech').then(function() {
+                var layer, ids;
+                for (var key in queryParams) {
+                  if (gaLayers.getLayer(key)) {
+                    layer = key;
+                    ids = queryParams[key].split(',');
+                    break;
+                  }
+                }
+                if (layer && ids) {
+                  var promises = $.map(ids, function(id) {
+                    return $http.get('http://mf-chsdi30t.bgdi.admin.ch/rest/services/ech/MapServer/' + layer + '/' + id);
+                  });
+                  $q.all(promises).then(function(results) {
+                    var extent = ol.extent.createEmpty();
+                    angular.forEach(results, function(result) {
+                      var bbox = result.data.feature.bbox;
+                      ol.extent.extend(extent, [
+                        bbox[0], bbox[2], bbox[1], bbox[3]
+                      ]);
+                    });
+                    view.fitExtent(extent, scope.map.getSize());
+                  });
+                }
+              });
+
 
               // Update permalink based on view states. We use a timeout
               // not to incur an Angular dirty-check cycle on each view
