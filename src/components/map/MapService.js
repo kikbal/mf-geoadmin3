@@ -140,10 +140,12 @@
           var layer = layers[id];
           var olLayer = layer.olLayer;
           if (!angular.isDefined(olLayer)) {
+            var timestamps = (layer.timeEnabled) ? layer.timestamps : undefined;
+
             if (layer.type == 'wmts') {
               olLayer = new ol.layer.Tile({
                 id: id,
-                timestamps: (layer.timeEnabled) ? layer.timestamps : undefined,
+                timestamps: timestamps,
                 source: new ol.source.WMTS({
                   attributions: [
                     getAttribution(layer.attribution)
@@ -158,7 +160,41 @@
                 })
               });
               layer.olLayer = olLayer;
+
+            } else if (layer.type === 'wms' || layer.type === 'wmst') {
+              var wmsUrl = 'http://wms-test0i.bgdi.admin.ch/';
+              var wmsParams = {
+                'LAYERS': id
+              };
+
+              if (layer.timeEnabled) {
+                wmsParams['TIME'] = '';
+              }
+
+              if (layer.type === 'wms') {
+                olLayer = new ol.layer.ImageLayer({
+                  id: id,
+                  timestamps: timestamps,
+                  source: new ol.source.SingleImageWMS({
+                    params: wmsParams,
+                    url: wmsUrl,
+                    ratio: 1
+                  })
+                });
+              } else {
+                olLayer = new ol.layer.TileLayer({
+                  id: id,
+                  timestamps: timestamps,
+                  source: new ol.source.TiledWMS({
+                    params: wmsParams,
+                    url: wmsUrl
+                  })
+                });
+              }
+
+              layer.olLayer = olLayer;
             }
+
             if (angular.isDefined(olLayer)) {
               gaDefinePropertiesForLayer(olLayer);
             }
