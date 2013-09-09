@@ -167,10 +167,6 @@
                 'LAYERS': id
               };
 
-              if (layer.timeEnabled) {
-                wmsParams['TIME'] = '';
-              }
-
               if (layer.type === 'wms') {
                 olLayer = new ol.layer.ImageLayer({
                   id: id,
