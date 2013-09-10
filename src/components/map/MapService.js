@@ -168,7 +168,7 @@
               };
 
               if (layer.type === 'wms') {
-                olLayer = new ol.layer.ImageLayer({
+                olLayer = new ol.layer.Image({
                   id: id,
                   timestamps: timestamps,
                   source: new ol.source.SingleImageWMS({
@@ -178,10 +178,10 @@
                   })
                 });
               } else {
-                olLayer = new ol.layer.TileLayer({
+                olLayer = new ol.layer.Tile({
                   id: id,
                   timestamps: timestamps,
-                  source: new ol.source.TiledWMS({
+                  source: new ol.source.TileWMS({
                     params: wmsParams,
                     url: wmsUrl
                   })
