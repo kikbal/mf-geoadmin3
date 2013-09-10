@@ -38,6 +38,7 @@
   goog.require('ga_feedback_controller');
   goog.require('ga_contextpopup_controller');
   goog.require('ga_search_controller');
+  goog.require('ga_timeselector_controller');
   goog.require('ga_tooltip_controller');
 
   var module = angular.module('ga', [
@@ -76,7 +77,8 @@
     'ga_feedback_controller',
     'ga_contextpopup_controller',
     'ga_search_controller',
-    'ga_tooltip_controller'
+    'ga_tooltip_controller',
+    'ga_timeselector_controller'
   ]);
 
   module.config(function($translateProvider) {
