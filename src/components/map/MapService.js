@@ -171,7 +171,7 @@
                 olLayer = new ol.layer.Image({
                   id: id,
                   timestamps: timestamps,
-                  source: new ol.source.SingleImageWMS({
+                  source: new ol.source.ImageWMS({
                     params: wmsParams,
                     url: wmsUrl,
                     ratio: 1
