@@ -96,12 +96,18 @@
       margin-left: 1px;
       cursor: move;
       z-index: 0;
-      background:
+     /* background:
       url(http://map.swisstopo.admin.ch/main/wsgi/lib/GeoAdmin.ux/TimeSeries/img/slider-middle.png)
       no-repeat center top;
 
       &::after {
-        content: none;
+        content: "\f18e";
+      }*/
+     
+      &::before {
+        margin-top: -20px;
+        margin-left: -10px;
+        vertical-align: top;
       }
     }
   

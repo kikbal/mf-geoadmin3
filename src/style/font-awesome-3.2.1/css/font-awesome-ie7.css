@@ -1201,3 +1201,6 @@ a [class*=" icon-"] {
 .icon-renren {
   *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf18b;');
 }
+.icon-slider {
+  *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf18e;');
+}

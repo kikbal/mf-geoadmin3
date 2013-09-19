@@ -1951,3 +1951,6 @@ a [class*=" icon-"] {
 }
 
 
+.icon-slider {
+  @include ie7icon('&#xf18e;');
+}
