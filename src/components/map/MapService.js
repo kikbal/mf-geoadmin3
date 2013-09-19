@@ -139,19 +139,18 @@
         this.getOlLayerById = function(id) {
           var layer = layers[id];
           var olLayer = layer.olLayer;
+          var currentTime = (layer.timeEnabled) ?
+              $rootScope.time : false;
           if (!angular.isDefined(olLayer)) {
-            var timestamps = (layer.timeEnabled) ? layer.timestamps : undefined;
-
             if (layer.type == 'wmts') {
               olLayer = new ol.layer.Tile({
                 id: id,
-                timestamps: timestamps,
                 source: new ol.source.WMTS({
                   attributions: [
                     getAttribution(layer.attribution)
                   ],
                   dimensions: {
-                    'Time': layer.timestamps[0]
+                    'Time': currentTime || layer.timestamps[0]
                   },
                   projection: 'EPSG:21781',
                   requestEncoding: 'REST',
@@ -161,16 +160,19 @@
               });
               layer.olLayer = olLayer;
 
-            } else if (layer.type === 'wms' || layer.type === 'wmst') {
+            } else if (layer.type === 'wms') {
               var wmsUrl = 'http://wms-test0i.bgdi.admin.ch/';
               var wmsParams = {
                 'LAYERS': id
               };
 
-              if (layer.type === 'wms') {
+              if (currentTime) {
+                wmsParams['TIMES'] = currentTime;
+              }
+
+              if (layer.singleTile) {
                 olLayer = new ol.layer.Image({
                   id: id,
-                  timestamps: timestamps,
                   source: new ol.source.ImageWMS({
                     params: wmsParams,
                     url: wmsUrl,
@@ -180,7 +182,6 @@
               } else {
                 olLayer = new ol.layer.Tile({
                   id: id,
-                  timestamps: timestamps,
                   source: new ol.source.TileWMS({
                     params: wmsParams,
                     url: wmsUrl
