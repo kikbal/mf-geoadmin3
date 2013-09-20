@@ -167,7 +167,7 @@
               };
 
               if (currentTime) {
-                wmsParams['TIMES'] = currentTime;
+                wmsParams['TIME'] = currentTime;
               }
 
               if (layer.singleTile) {
