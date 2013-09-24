@@ -91,6 +91,7 @@
       var Layers = function(wmtsGetTileUrlTemplate,
           layersConfigUrlTemplate, legendUrlTemplate) {
         var currentTopicId;
+        var currentTime;
         var layers;
 
         var getWmtsGetTileUrl = function(layer, format) {
@@ -139,8 +140,8 @@
         this.getOlLayerById = function(id) {
           var layer = layers[id];
           var olLayer = layer.olLayer;
-          var currentTime = (layer.timeEnabled) ?
-              $rootScope.time : false;
+          var time = (layer.timeEnabled) ?
+              currentTime : false;
           if (!angular.isDefined(olLayer)) {
             if (layer.type == 'wmts') {
               olLayer = new ol.layer.Tile({
@@ -150,7 +151,7 @@
                     getAttribution(layer.attribution)
                   ],
                   dimensions: {
-                    'Time': currentTime || layer.timestamps[0]
+                    'Time': time || layer.timestamps[0]
                   },
                   projection: 'EPSG:21781',
                   requestEncoding: 'REST',
@@ -166,8 +167,8 @@
                 'LAYERS': id
               };
 
-              if (currentTime) {
-                wmsParams['TIME'] = currentTime;
+              if (angular.isDefined(time)) {
+                wmsParams['TIME'] = time || layer.timestamps[0];
               }
 
               if (layer.singleTile) {
@@ -243,6 +244,11 @@
             loadForTopic(currentTopicId, $translate.uses());
           }
         });
+
+        $rootScope.$on('gaTimeSelectorChange', function(event, time) {
+          currentTime = time;
+        });
+
 
         /**
          * Get Metadata of given layer id
